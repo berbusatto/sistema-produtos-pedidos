@@ -4,13 +4,15 @@ namespace models;
 
 
 
+use Database;
+use ProdutoController;
+
 class Produto
 {
     private $id;
     private $descricao;
     private $valorVenda;
     private $estoque;
-
     private $imagem;
 
     public function __construct($id, $descricao, $valorVenda, $estoque)
@@ -19,7 +21,6 @@ class Produto
         $this->descricao = $descricao;
         $this->valorVenda = $valorVenda;
         $this->estoque = $estoque;
-
     }
 
     public static function listaProdutos($db){
@@ -35,15 +36,13 @@ class Produto
         return $products;
     }
 
-    // No arquivo Produto.php
-
-    public static function criaProduto($db, $descricao, $valor_venda, $estoque, $imagens = [])
+    public static function criaProduto($conn, $descricao, $valor_venda, $estoque, $imagens = [])
     {
         $sql = "INSERT INTO produtos (descricao, valor_venda, estoque) VALUES (?, ?, ?)";
-        $statement = $db->prepare($sql);
+        $statement = $conn->prepare($sql);
 
         if (!$statement) {
-            die('Erro no SQL: ' . $db->error);
+            die('Erro no SQL: ' . $conn->error);
         }
         $statement->bind_param("sdi", $descricao, $valor_venda, $estoque);
 
@@ -52,8 +51,15 @@ class Produto
         } else {
             echo "Erro na criação do produto: " . $statement->error;
         }
-
         $statement->close();
+
+        $produtoID = $conn->insert_id;
+
+        foreach ($imagens as $imagem) {
+            Imagem::criarImagem($conn, $produtoID, $imagem);
+        }
+
+
     }
 
 
@@ -86,14 +92,14 @@ class Produto
 
 
 
-    public  static function atualizaProduto($db, $id, $descricao, $valor_venda, $estoque)
+    public  static function atualizaProduto($conn, $id, $descricao, $valor_venda, $estoque)
     {
 
         $sql = "UPDATE produtos SET descricao = ?, valor_venda = ?, estoque = ? WHERE ID = ?";
-        $statement = $db->prepare($sql);
+        $statement = $conn->prepare($sql);
 
         if (!$statement) {
-            die('Erro no SQL: ' . $db->error);
+            die('Erro no SQL: ' . $conn->error);
         }
 
         $statement->bind_param("sdii", $descricao, $valor_venda, $estoque, $id);
@@ -104,20 +110,30 @@ class Produto
             echo "Erro na atualização do produto: " . $statement->error;
         }
 
-        $sql = "UPDATE imagens_produto SET produtoID = ?, imagem = ? WHERE ID = ?";
-
+        if (isset($_FILES["imagem"])) {
+            $novasImagens = $_FILES["imagem"];
+            foreach ($novasImagens["tmp_name"] as $novaImagem) {
+                $imgData = file_get_contents($novaImagem);
+                Imagem::criarImagem($conn, $id, $imgData);
+            }
+        }
         $statement->close();
 
     }
 
-    public static function excluiProduto($db, $id_produto)
+    public static function excluiProduto($conn, $id_produto)
     {
+        $imagensDoProduto = ProdutoController::buscarImagensDoProduto($id_produto);
+
+        foreach ($imagensDoProduto as $imagem) {
+            ProdutoController::excluirImagem($imagem->getImagemID());
+        }
 
         $sql = "DELETE FROM produtos WHERE ID = ?";
-        $statement = $db->prepare($sql);
+        $statement = $conn->prepare($sql);
 
         if (!$statement) {
-            die('Erro no SQL: ' . $db->error);
+            die('Erro no SQL: ' . $conn->error);
         }
 
         $statement->bind_param("i", $id_produto);

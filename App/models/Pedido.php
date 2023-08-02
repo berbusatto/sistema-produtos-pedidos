@@ -6,14 +6,15 @@ class Pedido
 {
     private $conexao;
 
-    public function __construct($conexao)
-    {
-        $this->conexao = $conexao;
-    }
 
-    public function listarPedidos()
+
+//    public function __construct($conexao)
+//    {
+//        $this->conexao = $conexao;
+//    }
+
+    public static function listarPedidos()
     {
-        // Implemente o código para listar os pedidos do banco de dados
         $query = "SELECT * FROM pedidos";
         $result = mysqli_query($this->conexao, $query);
         $pedidos = array();
