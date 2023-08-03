@@ -2,31 +2,33 @@
 
 use models\Pedido;
 
+require_once 'C:\DEV\excellent_sistemas\App\Database.php';
+require_once 'C:\DEV\excellent_sistemas\App\models\Pedido.php';
+
 class PedidoController {
-    private $pedidoModel;
 
-    public function __construct($conexao)
+
+    public static function listarPedidos()
     {
-        $this->pedidoModel = new Pedido($conexao);
+        $db = new Database();
+        return Pedido::listarPedidos($db->getConn());
     }
 
-    public function listarPedidos()
+    public static function cadastrarPedido($dataPedido, $valorTotal, $cliente, $produtos, $quantidades)
     {
-        return $this->pedidoModel->listarPedidos();
+        $db = new Database();
+        Pedido::cadastraPedido($db->getConn(), $dataPedido ,$valorTotal, $cliente, $produtos, $quantidades);
     }
 
-    public function cadastrarPedido($dataPedido, $valorTotal, $cliente, $produtos, $quantidades)
+    public static function excluirPedido($pedidoId)
     {
-        $this->pedidoModel->cadastrarPedido($dataPedido, $valorTotal, $cliente, $produtos, $quantidades);
+        $db = new Database();
+        Pedido::excluiPedido($db->getConn(), $pedidoId);
     }
 
-    public function excluirPedido($pedidoId)
+    public static function buscarPedidoPorId($pedidoId)
     {
-        $this->pedidoModel->excluirPedido($pedidoId);
-    }
-
-    public function buscarPedidoPorId($pedidoId)
-    {
-        return $this->pedidoModel->buscarPedidoPorId($pedidoId);
+        $db = new Database();
+        return Pedido::buscarPedidoPorId($db->getconn(),$pedidoId);
     }
 }

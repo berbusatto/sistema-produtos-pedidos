@@ -22,36 +22,50 @@ require_once '..\..\controllers\PedidoController.php';
             <thead>
             <tr>
                 <th>ID</th>
-                <th>Produtos</th>
-                <th>Quantidade</th>
                 <th>Cliente</th>
-                <th>Total</th>
                 <th>Data do Pedido</th>
+                <th>Produtos</th>
+                <th>Total</th>
                 <th>Ações</th>
             </tr>
             </thead>
+
             <tbody>
-
             <?php
-                $pedidoController = new PedidoController();
 
+            $pedidoController = new PedidoController();
+            $response = $pedidoController->listarPedidos();
+
+
+            if (isset($response)) {
+                foreach ($response as $pedido) {
+                    echo "<tr>";
+                    echo "<td>{$pedido->getId()}</td>";
+                    echo "<td>{$pedido->getCliente()}</td>";
+                    echo "<td>{$pedido->getDataPedido()}</td>";
+
+                    echo "<td>";
+                    echo "<table>";
+                    foreach ($pedido->getItens() as $element) {
+                        echo "<tr>";
+                        echo "<td>{$element->getDescricaoProduto()}</td>";
+                        echo "<td>{$element->getQuantidade()}</td>";
+                        echo "</tr>";
+                    }
+                    echo "</table>";
+                    echo "</td>";
+
+                    echo "<td>{$pedido->getValorTotal()}</td>";
+
+                    echo "<td>";
+                    echo "<div class='d-flex flex-column'>";
+                    echo "<a href='#' class='btn btn-danger btn-sm delete-pedido' data-id='{$pedido->getId()}' data-toggle='modal' data-target='#confirmDeleteModal'>Excluir</a>";
+                    echo "</div>";
+                    echo "</td>";
+                    echo "</tr>";
+                }
+            }
             ?>
-
-<!--            Aqui você pode adicionar os dados dinamicamente com PHP -->
-<!--            <tr>-->
-<!--                <td>1</td>-->
-<!--                <td>Produto A, Produto B</td>-->
-<!--                <td>2, 3</td>-->
-<!--                <td>Cliente 1</td>-->
-<!--                <td>R$ 250,00</td>-->
-<!--                <td>2023-08-01</td>-->
-<!--                <td>-->
-<!--                    <div class='d-flex flex-column'>-->
-<!--                        <a href='#' class='btn btn-danger btn-sm'>Cancelar</a>-->
-<!--                    </div>-->
-<!--                </td>-->
-<!--            </tr>-->
-
             </tbody>
         </table>
     </div>
