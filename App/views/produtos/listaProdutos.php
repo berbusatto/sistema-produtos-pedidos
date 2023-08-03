@@ -95,7 +95,7 @@
         </div>
 
         <script>
-            // j-query para a exclusão do produto via modal
+            // jquery para a exclusão do produto via modal
             $(document).ready(function() {
                 $('#confirmDeleteModal').on('show.bs.modal', function (event) {
                     const button = $(event.relatedTarget);

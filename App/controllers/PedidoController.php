@@ -17,6 +17,7 @@ class PedidoController {
     public static function cadastrarPedido($dataPedido, $valorTotal, $cliente, $produtos, $quantidades)
     {
         $db = new Database();
+
         Pedido::cadastraPedido($db->getConn(), $dataPedido ,$valorTotal, $cliente, $produtos, $quantidades);
     }
 
