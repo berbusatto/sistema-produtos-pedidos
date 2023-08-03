@@ -15,7 +15,12 @@ require_once '..\..\controllers\PedidoController.php';
 <body class="bg-dark text-white">
     <div class="container mt-5">
         <h1 class="mb-4">Lista de Pedidos</h1>
-        <div><a href="cadastraPedido.php" class="btn btn-info btn-sm">Cadastrar Pedido</a></div>
+
+        <div class="d-flex justify-content-between">
+            <div><a href="../index.php" class="btn btn-danger btn-sm">Voltar</a></div>
+            <div><a href="cadastraPedido.php" class="btn btn-success btn-sm">Cadastrar Pedido</a></div>
+        </div>
+
         <br>
 
         <table class="table table-bordered text-white">

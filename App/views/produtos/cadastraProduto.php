@@ -11,6 +11,11 @@
 <div class="container mt-5">
     <h1 class="mb-4">Cadastro de Produtos</h1>
 
+    <div class="d-flex justify-content-between">
+        <div><a href="listaProdutos.php" class="btn btn-danger btn-sm">Voltar</a></div>
+    </div>
+
+    <br>
     <form method="post" action="criaProduto.php" enctype="multipart/form-data">
         <div class="form-group">
             <label for="descricao" class="form-label">Descrição:</label>

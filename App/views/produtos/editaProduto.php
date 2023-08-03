@@ -34,6 +34,10 @@ require_once '../../controllers/ProdutoController.php';
     <div class="container mt-5">
         <h1 class="mb-4">Editar Produto</h1>
 
+        <div class="d-flex justify-content-between">
+            <div><a href="listaProdutos.php" class="btn btn-danger btn-sm">Voltar</a></div>
+        </div>
+        <br>
         <form method="post" action="atualizaProduto.php" enctype="multipart/form-data">
             <div class="form-group">
                 <input type="hidden" name="id_produto" id="id_produto" value="<?php echo $id_produto; ?>">
